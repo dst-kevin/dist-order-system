@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>디스트 발주관리</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+body{font-family:Arial;padding:20px;background:#f5f5f5}
+.card{background:white;padding:20px;border-radius:10px;margin-bottom:20px}
+input{padding:8px;margin:5px;width:100%}
+button{padding:10px;background:#2563eb;color:white;border:none;border-radius:5px}
+table{width:100%;border-collapse:collapse}
+td,th{border:1px solid #ddd;padding:8px}
+</style>
+</head>
+
+<body>
+
+<h2>디스트 발주 입고 관리</h2>
+
+<div class="card">
+<input id="vendor" placeholder="거래처">
+<input id="product" placeholder="제품명">
+<input id="qty" placeholder="수량">
+<button onclick="add()">추가</button>
+</div>
+
+<div class="card">
+<table>
+<thead>
+<tr>
+<th>거래처</th>
+<th>제품</th>
+<th>수량</th>
+<th>입고1</th>
+<th>입고2</th>
+<th>상태</th>
+</tr>
+</thead>
+
+<tbody id="list"></tbody>
+
+</table>
+</div>
+
+<script>
+
+let data=[]
+
+function add(){
+let vendor=document.getElementById('vendor').value
+let product=document.getElementById('product').value
+let qty=document.getElementById('qty').value
+
+data.push({vendor,product,qty,r1:0,r2:0})
+
+render()
+}
+
+function render(){
+
+let html=""
+
+data.forEach((d,i)=>{
+
+let status="미입고"
+
+if(d.r1+d.r2>0) status="부분입고"
+if(d.r1+d.r2>=d.qty) status="입고완료"
+
+html+=`
+<tr>
+<td>${d.vendor}</td>
+<td>${d.product}</td>
+<td>${d.qty}</td>
+<td><input onchange="update(${i},'r1',this.value)"></td>
+<td><input onchange="update(${i},'r2',this.value)"></td>
+<td>${status}</td>
+</tr>
+`
+
+})
+
+document.getElementById("list").innerHTML=html
+
+}
+
+function update(i,key,val){
+
+data[i][key]=Number(val)
+render()
+
+}
+
+</script>
+
+</body>
+</html>
